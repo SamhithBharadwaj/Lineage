@@ -1,5 +1,6 @@
 package com.bharadwaj.samhith.lineage.service;
 
+import com.bharadwaj.samhith.lineage.exceptions.InvalidDataException;
 import com.bharadwaj.samhith.lineage.models.FamilyLineage;
 import com.bharadwaj.samhith.lineage.models.Member;
 import org.json.simple.JSONArray;
@@ -15,13 +16,30 @@ import java.util.List;
 
 public class FamilyLineageLoader {
 
+    public static FamilyLineageLoader lineageLoader;
+
+    private FamilyLineageLoader() {
+
+    }
+
+    public static FamilyLineageLoader getLineageLoader() {
+        if (lineageLoader == null) {
+            synchronized (FamilyLineageLoader.class) {
+                if (lineageLoader == null) {
+                    lineageLoader = new FamilyLineageLoader();
+                }
+            }
+        }
+        return lineageLoader;
+    }
+
     public MemberObjectValidator memberObjectValidator = new MemberObjectValidator();
 
-    public List<FamilyLineage> loadLineagesFromFile(File file) {
+    public FamilyLineage loadLineageFromFile(File file) {
         JSONParser parser = new JSONParser();
         try {
             JSONObject object = (JSONObject) parser.parse(new FileReader(file));
-            return buildLineagesFromJsonObj(object);
+            return buildLineageFromJsonObj(object);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ParseException e) {
@@ -30,12 +48,11 @@ public class FamilyLineageLoader {
 
     }
 
-    private List<FamilyLineage> buildLineagesFromJsonObj(JSONObject obj) {
-        List<FamilyLineage> familyLineages = new ArrayList<>();
-        for (Object lineageObject : (JSONArray) obj.get("lineage")) {
-            familyLineages.add(parseLineageObject((JSONObject) lineageObject));
-        }
-        return familyLineages;
+    private FamilyLineage buildLineageFromJsonObj(JSONObject obj) {
+        Object lineage = obj.get("lineage");
+        if (lineage == null)
+            throw new InvalidDataException("Invalid linage data.");
+        return parseLineageObject((JSONObject) lineage);
     }
 
     private FamilyLineage parseLineageObject(JSONObject object) {

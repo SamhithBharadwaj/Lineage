@@ -3,7 +3,9 @@ package com.bharadwaj.samhith.lineage.models;
 import java.util.List;
 
 public class Member {
+
     private String name;
+
     private int birthYear;
     private int deathYear;
     private List<Member> members;
@@ -16,7 +18,7 @@ public class Member {
         this.name = name;
     }
 
-    public int getBirthYear() {
+    public Integer getBirthYear() {
         return birthYear;
     }
 
@@ -24,7 +26,7 @@ public class Member {
         this.birthYear = birthYear;
     }
 
-    public int getDeathYear() {
+    public Integer getDeathYear() {
         return deathYear;
     }
 
@@ -38,6 +40,10 @@ public class Member {
 
     public void setMembers(List<Member> members) {
         this.members = members;
+    }
+
+    public Integer getAge(){
+        return deathYear-birthYear;
     }
 
     @Override

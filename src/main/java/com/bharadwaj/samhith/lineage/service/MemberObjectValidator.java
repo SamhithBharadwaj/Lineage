@@ -27,7 +27,7 @@ public class MemberObjectValidator {
     }
 
     private String validateAndParseName(JSONObject obj) {
-        JSONObject name = (JSONObject) obj.get("Name");
+        Object name = obj.get("Name");
         if (name == null) throw new InvalidDataException("Name is null");
         String nameStr = name.toString();
         return nameStr;
@@ -35,24 +35,22 @@ public class MemberObjectValidator {
     }
 
     private int validateAndParseBirthYear(JSONObject obj) {
-        JSONObject year = (JSONObject) obj.get("BirthYear");
         try {
-            return validateAndParseYear(year);
+            return validateAndParseYear(obj.get("BirthYear"));
         } catch (InvalidDataException e) {
             throw new InvalidDataException("Invalid Birth year");
         }
     }
 
     private int validateAndDeathYear(JSONObject obj) {
-        JSONObject year = (JSONObject) obj.get("BirthYear");
         try {
-            return validateAndParseYear(year);
+            return validateAndParseYear(obj.get("DeathYear"));
         } catch (InvalidDataException e) {
             throw new InvalidDataException("Invalid  Death year");
         }
     }
 
-    private int validateAndParseYear(JSONObject year) {
+    private int validateAndParseYear(Object year) {
         if (year == null) throw new InvalidDataException("Year is Null");
 
         try {
@@ -69,9 +67,15 @@ public class MemberObjectValidator {
         member.setName(validateAndParseName(object));
         member.setBirthYear(validateAndParseBirthYear(object));
         member.setDeathYear(validateAndDeathYear(object));
+        validateMemberAge(member);
         member.setMembers(validateAndReturnMembers(object));
         return member;
 
+    }
+
+    private void validateMemberAge(Member m){
+        if(m.getAge()<0)
+            throw new InvalidDataException("Death year before birth Year");
     }
 
 
