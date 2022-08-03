@@ -59,7 +59,7 @@ public class FamilyLineageLoader {
         FamilyLineage lineage = new FamilyLineage();
         lineage.setFamilyTree((object.get("FamilyTree")).toString());
         List<Member> members = new ArrayList<>();
-        lineage.setMembers(memberObjectValidator.validateAndReturnMembers(object));
+        lineage.setMembers(memberObjectValidator.validateAndReturnMembers(object,Integer.MIN_VALUE));
 
         return lineage;
     }

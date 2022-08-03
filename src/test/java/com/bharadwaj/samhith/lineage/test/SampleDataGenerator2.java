@@ -1,6 +1,5 @@
 package com.bharadwaj.samhith.lineage.test;
 
-import com.bharadwaj.samhith.lineage.service.LineageDataProcessor;
 import com.bharadwaj.samhith.lineage.service.LineageProcessor;
 import com.bharadwaj.samhith.lineage.test.models.Lineage;
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -15,7 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class SampleDataGenerator {
+public class SampleDataGenerator2 {
 
     public static final int NO_OF_FILES = 20;
 
@@ -23,24 +22,19 @@ public class SampleDataGenerator {
 
 
     public static void main(String[] args) {
-        try {
-            prepareDirectoryForExport();
-
-            for (int i = 0; i < NO_OF_FILES; i++) {
-                String file = LineageProcessor.INPUT_DIRECTORY + "familyTreeGenerated" + i + ".json";
-                JsonGenerator generator= getWriterForFile(file);
-                try {
-                    Lineage lineage = builder.buildLineageObjectWithGenerator(generator);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        for (int i = 0; i < NO_OF_FILES; i++) {
+            String file = "files/familyTreeGenerated" + i + ".json";
+            Lineage lineage=builder.buildLineageObject();
+            try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
+                prepareDirectoryForExport();
+                Gson gson = new Gson();
+                String jsonString = gson.toJson(lineage);
+                out.write(jsonString);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-
     }
-
 
 
     private static void prepareDirectoryForExport() throws IOException {

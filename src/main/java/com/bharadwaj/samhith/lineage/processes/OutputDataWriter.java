@@ -2,11 +2,14 @@ package com.bharadwaj.samhith.lineage.processes;
 
 import com.bharadwaj.samhith.lineage.processes.output.AgeIndexOutputWriter;
 import com.bharadwaj.samhith.lineage.processes.output.LineIndexOutputWriter;
+import com.bharadwaj.samhith.lineage.service.LineageDataProcessor;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class OutputDataWriter {
 
@@ -20,6 +23,7 @@ public class OutputDataWriter {
     public void writeToFile(String fileName) throws IOException {
         Writer writer = null;
         try {
+            prepareDirectoryForExport();
             writer = getWriterForFile(fileName);
             writeDataFromLineIndex(writer);
             writeDataFromAgeIndex(writer);
@@ -45,6 +49,15 @@ public class OutputDataWriter {
     private Writer getWriterForFile(String fileName) throws IOException {
         return new BufferedWriter(new FileWriter(fileName, true));
 
+    }
+
+    private void prepareDirectoryForExport() throws IOException {
+        File file = new File(LineageDataProcessor.OUTPUT_FILE_PATH);
+        if (file.exists()) {
+            FileUtils.cleanDirectory(file);
+        } else {
+            file.mkdir();
+        }
     }
 
 }

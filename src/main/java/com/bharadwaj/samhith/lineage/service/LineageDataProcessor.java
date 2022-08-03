@@ -13,13 +13,13 @@ import java.util.List;
 
 public class LineageDataProcessor {
 
-
+public static final String OUTPUT_FILE_PATH="output/";
     public void process(FamilyLineage lineage, String fileName) {
         try {
             DataCollector collector = new DataCollector();
             collector.iterateFamilyLineage(lineage);
             OutputDataWriter writer = new OutputDataWriter(collector);
-            writer.writeToFile("output/" + fileName.replace(".json", ".txt"));
+            writer.writeToFile(OUTPUT_FILE_PATH + fileName.replace(".json", ".txt"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);

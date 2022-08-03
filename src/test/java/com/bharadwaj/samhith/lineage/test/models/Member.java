@@ -3,7 +3,7 @@ package com.bharadwaj.samhith.lineage.test.models;
 import java.util.List;
 
 public class Member {
-    private String Name;
+    private String Name ;
 
     private int BirthYear;
     private int DeathYear;

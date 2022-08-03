@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MembersAgeIndex {
     private List<Member> members = new ArrayList<>();
-    private float mean = 0;
+    private int sum = 0;
     private int size = 0;
 
     private int firstBirth = Integer.MAX_VALUE;
@@ -22,7 +22,7 @@ public class MembersAgeIndex {
             throw new RuntimeException("Index immutable");
         }
         members.add(member);
-        mean = ((mean * size) + member.getAge()) / (size + 1);
+        sum+=member.getAge();
         size++;
         firstBirth = Math.min(member.getBirthYear(), firstBirth);
         lastDeath = Math.max(member.getDeathYear(), lastDeath);
@@ -53,7 +53,7 @@ public class MembersAgeIndex {
     }
 
     public float getMean() {
-        return mean;
+        return sum/size;
     }
 
     public List<Member> getIQR() {

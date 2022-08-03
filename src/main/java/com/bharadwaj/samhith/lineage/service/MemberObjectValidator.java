@@ -10,13 +10,13 @@ import java.util.List;
 
 public class MemberObjectValidator {
 
-    public List<Member> validateAndReturnMembers(JSONObject object) {
+    public List<Member> validateAndReturnMembers(JSONObject object,int era) {
         Object members = object.get("Members");
         List<Member> membersList = new ArrayList<>();
         if (members != null) {
             for (Object o : (JSONArray) members) {
                 try {
-                    membersList.add(validateAndParseMember((JSONObject) o));
+                    membersList.add(validateAndParseMember((JSONObject) o,era));
                 } catch (InvalidDataException e) {
                     //log issue
                 }
@@ -60,20 +60,22 @@ public class MemberObjectValidator {
         }
     }
 
-    private Member validateAndParseMember(JSONObject object) {
+    private Member validateAndParseMember(JSONObject object,int era) {
         if (object == null) throw new InvalidDataException("Null member object");
 
         Member member = new Member();
         member.setName(validateAndParseName(object));
         member.setBirthYear(validateAndParseBirthYear(object));
         member.setDeathYear(validateAndDeathYear(object));
-        validateMemberAge(member);
-        member.setMembers(validateAndReturnMembers(object));
+        validateMemberAge(member,era);
+        member.setMembers(validateAndReturnMembers(object, member.getAge()));
         return member;
 
     }
 
-    private void validateMemberAge(Member m){
+    private void validateMemberAge(Member m,int era){
+        if(m.getAge()<era)
+            throw new InvalidDataException("Birth year before parent birth Year");
         if(m.getAge()<0)
             throw new InvalidDataException("Death year before birth Year");
     }
